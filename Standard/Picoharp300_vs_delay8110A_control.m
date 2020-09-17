@@ -9,7 +9,7 @@ clear all;
 %%%%% Script for 8110A pulse generator control in MATLB
 %%%%  Abdelrahman Afifi
 %%%% 27 May 2019
-
+%%
 obj=gpib('ni',0,28);
 obj.InputBufferSize = 1000;
 obj.timeout=1000;
@@ -78,7 +78,7 @@ t(1,:) = linspace(offset,time_span,num_point+1);
 t(1,:) = t(1,:)+offset;
 fprintf('Estimated time is %d sec, or % d min',(length(t(1,:))-1)*pause_s, (length(t(1,:))-1)*pause_s/60)
 %fold_name='data_dcrbin0dm_1mdelaytwosdswithoutfilters1'
-
+%%
 
 % Constants from Phdefin.h
 
