@@ -8,6 +8,72 @@ import time
 import ctypes as ct
 from ctypes import byref
 
+import numpy as np # NumPy is the fundamental package for scientific computing with Python
+import matplotlib.pyplot as plt
+
+from scipy.io import savemat
+from scipy.io import loadmat
+from scipy.interpolate import interp1d
+from scipy.interpolate import interp2d
+import os
+
+import SPD_ID210_v1 
+reload(SPD_ID210_v1)
+SPD1=SPD_ID210_v1.SPD_ID210()
+SPD1.connect('TCPIP0::10.20.199.62::5025::SOCKET')
+SPD2=SPD_ID210_v1.SPD_ID210()
+SPD2.connect('TCPIP0::10.20.199.165::5025::SOCKET')
+
+
+
+det_efficiency= SPD1.get_detector_efficiency()*0.1
+print('detector efficiency '+ str(det_efficiency)+'%' )
+#SPD1.set_detector_efficiency(100)
+det_mode=SPD1.get_detector_mode()
+print('Detecor mode' + det_mode)
+#SPD1.set_detector_mode('FREE_RUNNING')
+#SPD1.set_detector_deadtime(1000)
+gatewidth=SPD1.get_gate_width()*1e-12             ## in seconds
+print('gate width ' + str(gatewidth) )
+dead_time_SPD1=SPD1.get_detector_deadtime()*1e-9             ## in seconds
+print('Detecor dead time ' + str(dead_time_SPD1) )
+
+Int_time_SPD1=SPD1.get_detector_Integrationtime()*0.1  ## in seconds 
+print('Detecor Integration time ' + str(Int_time_SPD1) )
+
+## Detector settings set
+gatewidth=5e-9
+freq_Det_Int_gate=10e6
+trigger_delay=0e-9
+SPD1.set_detector_mode('FREE_RUNNING')
+SPD1.set_detector_frequency(10000000)
+SPD1.set_detector_gatewidth(5000)
+SPD1.set_detector_deadtime(100)
+SPD1.set_detector_triggerdelay(00)
+SPD1.set_detector_countingmode('Frequency')
+
+
+det_efficiency= SPD1.get_detector_efficiency()*0.1
+time.sleep(10)
+
+det_mode=SPD1.get_detector_mode()
+time.sleep(10)
+
+dead_time_SPD1=SPD1.get_detector_deadtime()*1e-9             ## in seconds
+time.sleep(10)
+Int_time_SPD1=SPD1.get_detector_Integrationtime()*0.1  ## in seconds 
+time.sleep(10)
+
+R= np.array([SPD1.get_detector_count()])
+R_array=np.fromstring(R.astype(str), dtype=float, sep=',')
+time.sleep(10)
+
+DCR=R_array[1]
+DCR_std=R_array[2]
+
+
+
+
 # From phdefin.h
 LIB_VERSION = "3.0"
 HISTCHAN = 65536
